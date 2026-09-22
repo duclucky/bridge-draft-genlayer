@@ -1,0 +1,6 @@
+{
+  "network": "Studio Dev",
+  "status": "REJECTED_BEFORE_DEPLOYMENT",
+  "deployment_tx": "0x360c4fd0e9702601244f92eeed94892e76f2ea84b0442ebb733c3145b4bd5cd0",
+  "reason": "Studio Dev required a nonzero network fee quote. No contract address was created by this attempt."
+}

@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "status": "ABANDONED",
+  "reason": "A non-mutating create_session fee simulation returned an internal error after the revision used host datetime. The canonical transaction datetime revision replaces it; no browser value-bearing retry is permitted against this revision.",
+  "deployment_tx": "0xc10c1284c65691677aceee799f36effe019b36d918daa82e3a02b299cd846467",
+  "contract_address": "0x8fa6A032528920fB36E8cAAd84b389e1B324EC09",
+  "source_commit": "UNCOMMITTED",
+  "source_sha256": "90a78c32c0df0b9d78889827094dc84ffcbd856f0d655ea472965dcd68e70fee",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "replacement_authorized": true
+}

@@ -1,0 +1,18 @@
+{
+  "network": "Studio Dev",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "transaction_hash": "0x1853f44e96f1bcbf38b2105691e439ed84014cace7bf7f980d0e0d4b7eff0c4b",
+  "finalization_status": "FINALIZED",
+  "consensus_status": "UNDETERMINED",
+  "execution": "FINISHED_WITH_RETURN",
+  "canonical_state_after_finalization": {
+    "phase": "COLLECTING",
+    "verdict": "",
+    "draft_present": false,
+    "locked_gen": 2,
+    "party_a_actions": [
+      "request_review"
+    ]
+  },
+  "interpretation": "No review outcome was materialized. This observation does not authorize any transfer or further retry."
+}

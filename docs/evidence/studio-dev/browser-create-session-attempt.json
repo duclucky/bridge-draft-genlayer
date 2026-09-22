@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "kind": "browser wallet create_session attempt",
+  "transaction_hash": "0x2f2756b0c4f426cddfa6f5be760688ce9f2c005eef54284c4949a3184aeafbe3",
+  "status": "FINALIZED",
+  "execution_result": "FINISHED_WITH_ERROR",
+  "value_gen": "2 GEN",
+  "canonical_session_created": false,
+  "diagnosis": "Contract execution failure; an allowlisted transaction lookup did not expose a revert reason and the hosted endpoint did not provide debug tracing.",
+  "conclusion": "The attempt is not a successful lifecycle proof and must not be retried against this deployed revision."
+}

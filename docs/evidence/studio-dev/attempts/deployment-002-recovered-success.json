@@ -1,0 +1,8 @@
+{
+  "network": "Studio Dev",
+  "status": "FINALIZED_SUCCESS",
+  "deployment_tx": "0x35d47689d6e893a06ac1c1788be01a19b3b69c94b68db86e330e95c6531cddee",
+  "contract_address": "0xbDB736FfB162af5414e4EE5c2C1A0F7C6acB9EB8",
+  "fee": "0.100000000000010352 GEN",
+  "recovery": "The SDK receipt projection omitted the contract address; an allowlisted finalized transaction lookup and BridgeDraft schema read established the deployed address."
+}

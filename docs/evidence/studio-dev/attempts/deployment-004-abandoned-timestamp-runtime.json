@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "status": "ABANDONED",
+  "reason": "A non-mutating create_session fee simulation exposed that gl.vm.get_timestamp is unsupported by the current Studio Dev runner. This revision must not receive a browser value-bearing retry.",
+  "deployment_tx": "0xb109e5e09226ef41c625172328d38c5c43c5ca8979c111ea93758044326e7ede",
+  "contract_address": "0xCBB969e5c5b72495Ed2189084748E24877f9fb9c",
+  "source_commit": "UNCOMMITTED",
+  "source_sha256": "5ccbcbac4941f1436f3d66771948adbbce9ed202bd4986d82c3e795e01579601",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "replacement_authorized": true
+}

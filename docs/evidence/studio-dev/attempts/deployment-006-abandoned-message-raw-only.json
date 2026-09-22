@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "status": "ABANDONED",
+  "reason": "A non-mutating create_session simulation proved this revision receives no message_raw.datetime on the hosted Studio Dev runner. The replacement falls back to the transaction message datetime and has no browser value-bearing retry against this revision.",
+  "deployment_tx": "0x7e9ebb26abb88b27f2db35712e4d77a6829545eb01f18b3874ca7b9561cef028",
+  "contract_address": "0x26cB95ef90DcB0c17e36c848bB3aF4D70A001679",
+  "source_commit": "UNCOMMITTED",
+  "source_sha256": "55d65bd119bedaff47094691aac69650a8fc81427deab01619063d41a4492782",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "replacement_authorized": true
+}

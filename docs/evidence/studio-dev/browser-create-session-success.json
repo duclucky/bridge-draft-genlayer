@@ -1,0 +1,17 @@
+{
+  "network": "Studio Dev",
+  "contract_address": "0x2D586812a8F9cD34bAfB92353faEF66F3D53031F",
+  "kind": "browser wallet create_session",
+  "transaction_hash": "0xbe14b8d996ea1fc09c502766d3641ce13b6d29dc04cbde97e4b565e37c4fffd0",
+  "status": "FINALIZED",
+  "execution_result": "FINISHED_WITH_RETURN",
+  "value_gen": "2 GEN",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "canonical_state": {
+    "phase": "COLLECTING",
+    "locked_gen": 2,
+    "party_a": "0x45ad397c438397a702b53a7499a78d08961d39db",
+    "party_b": "0x45248be151f7f7e230150db23774733cd966eb45"
+  },
+  "browser_proof": "The connected browser wallet received submitted, finalized, and canonical-state-reloaded UI states."
+}

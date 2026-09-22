@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "status": "ABANDONED",
+  "reason": "A browser-wallet create_session transaction finalized with FINISHED_WITH_ERROR. The hosted endpoint exposed no revert reason or debug trace, so this revision must not receive another value-bearing retry.",
+  "deployment_tx": "0x35d47689d6e893a06ac1c1788be01a19b3b69c94b68db86e330e95c6531cddee",
+  "contract_address": "0xbDB736FfB162af5414e4EE5c2C1A0F7C6acB9EB8",
+  "source_commit": "UNCOMMITTED",
+  "source_sha256": "d58012d03bfea989264255153762dfdff9718ab90e768044d7ebcb6aaf7666d1",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "replacement_authorized": true
+}
