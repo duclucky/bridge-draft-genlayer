@@ -1,0 +1,16 @@
+{
+  "network": "Studio Dev",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "attempts": [
+    {
+      "role": "A",
+      "transaction_hash": "0x600b251ee66db78e7c536336189f98571a975ba22ebe4fbda3d7f59b42b37d4d",
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
+      "role": "B",
+      "transaction_hash": "0x632bfc131659f1316740086c7980cc721929e01fb899f8ac9293bac952063abd",
+      "status": "FINALIZED_SUCCESS"
+    }
+  ]
+}

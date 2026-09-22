@@ -4,7 +4,7 @@
 
 - Idea ID: IDEA-034
 - Category: Projects
-- Status: BUILDING (Studio Dev deployment finalized; browser-wallet lifecycle remains under live verification)
+- Status: BUILDING (Studio Dev lifecycle finalized; public repository and production hosting remain pending)
 - Repository: local child repository `D:\Genlayer Project\bridge-draft`
 - Network: Studio Dev (endpoint/chain parameters require action-time verification)
 
@@ -310,7 +310,7 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 - Network: Studio Dev only, with current official endpoint/chain verification immediately before any action.
 - Actors: existing authorized local EOAs only, with sponsor distinct from A/B where available. Variables are checked only for nonempty presence and never printed.
 - Deploy: verify API/header/lint/direct tests, deploy resumably, save allowlisted identity/receipt fields, and read canonical state before any retry.
-- Lifecycle: if separately authorized, create with 2 GEN, both terms, review, both ratifications, two 1 GEN withdrawals; test separate expiry/conflict refund path only with authorization.
+- Lifecycle: create with 2 GEN, both terms, review, both ratifications, and two 1 GEN withdrawals are finalized on the active revision; expiry refund remains a separately documented recovery path.
 - Browser demo timing: the New session form sets a 10-minute collection deadline and offers 20-, 30-, or 60-minute ratification deadlines. These are explicitly short Studio Dev demo presets, not a claim about an appropriate production operating window; the deployed contract independently enforces both timestamps on every affected entrypoint.
 - Canonical reads follow every finalized write. Evidence in `docs/evidence/studio-dev/` contains only sanitized command, receipt, state, browser, source-commit, and deployment-identity data.
 
@@ -324,7 +324,14 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 - [x] All claimed browser lifecycle writes have an adapter wrapper, state-gated control, finality handling, and canonical reload code.
 - [x] Primary UI limits itself to user-relevant terms, draft, coverage, legal actions, and GEN credit; raw validator internals remain hidden.
 - [x] Studio Dev deployment finalized and its BridgeDraft schema was read back from the deployed address.
-- [ ] Browser-wallet lifecycle with separately confirmed value-bearing test transactions.
+- [x] Browser-wallet sponsor creation was confirmed on Studio Dev; the active revision's full lifecycle is separately labeled script-signed evidence.
+
+## Current Studio Dev lifecycle evidence
+
+- Active contract: `0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911)).
+- Session creation: 2 GEN locked, then two terms and one semantic review finalized `BALANCED_DRAFT`.
+- Settlement: both parties ratified; each made one finalized withdrawal of 1 GEN. Canonical terminal read: `RATIFIED`, `locked_gen=0`, `a_credit_gen=0`, `b_credit_gen=0`.
+- Evidence files retain only allowlisted hashes, actor roles, finality, and canonical reads. Browser proof and script-signed proof are intentionally distinct.
 
 ## Honest limitations
 

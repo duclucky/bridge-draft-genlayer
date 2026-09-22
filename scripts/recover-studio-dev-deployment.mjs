@@ -12,8 +12,18 @@ const evidencePath = resolve(root, 'docs', 'evidence', 'studio-dev', 'deployment
 const frontendEnvPath = resolve(root, 'frontend', '.env')
 const rpc = 'https://studio-next.genlayer.com/api'
 const chain = { ...studioDevnet, id: 61997, rpcUrls: { default: { http: [rpc] } }, blockExplorers: { default: { name: 'Studio Dev Explorer', url: 'https://explorer-studio-dev.genlayer.com/' } } }
+const replaceActiveRevision = process.argv.includes('--replace-active-revision')
 
-if (existsSync(evidencePath)) throw new Error('Active deployment evidence already exists.')
+if (existsSync(evidencePath)) {
+  if (!replaceActiveRevision) throw new Error('Active deployment evidence already exists.')
+  const previous = JSON.parse(readFileSync(evidencePath, 'utf8'))
+  if (previous.status !== 'FINALIZED_SUCCESS' || typeof previous.contract_address !== 'string') throw new Error('Active deployment evidence is not archiveable.')
+  const archivePath = resolve(root, 'docs', 'evidence', 'studio-dev', 'attempts', `deployment-replaced-${previous.contract_address.toLowerCase()}-${String(previous.source_sha256 ?? 'unknown').slice(0, 12)}.json`)
+  if (!existsSync(archivePath)) {
+    mkdirSync(dirname(archivePath), { recursive: true })
+    writeFileSync(archivePath, JSON.stringify({ ...previous, archived_status: 'REPLACED_PENDING_REFUND', replacement_reason: 'Schema-prompt revision deployed after repeated review consensus failure.' }, null, 2) + '\n', 'utf8')
+  }
+}
 if (!existsSync(attemptPath)) throw new Error('No deployment attempt is available for recovery.')
 const attempt = JSON.parse(readFileSync(attemptPath, 'utf8'))
 if (typeof attempt.deployment_tx !== 'string' || !/^0x[0-9a-fA-F]{64}$/.test(attempt.deployment_tx)) throw new Error('The attempt does not contain a transaction hash.')

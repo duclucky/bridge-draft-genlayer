@@ -4,7 +4,8 @@
   "attempts": [
     {
       "role": "B",
-      "transaction_hash": "0xce1844cb38686ce0e42830ac2cb1cb653c9f4666b58ce7999de57985c0505731",
+      "transaction_hash": "0xf3c9ed25705b37aafdf874ab984fb996d2c990d68d49f3b123a13cc4be8c4483",
+      "transfer_gen": 1,
       "status": "FINALIZED_SUCCESS"
     }
   ]

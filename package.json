@@ -4,17 +4,21 @@
   "type": "module",
   "workspaces": ["frontend"],
   "scripts": {
- "check": "set PYTHONUTF8=1&& .\\.venv\\Scripts\\python.exe scripts\\genvm_lint_rc.py check contracts\\bridge_draft.py && .\\.venv\\Scripts\\pytest.exe tests\\direct -v && node --check scripts\\deploy-studio-dev.mjs && node --check scripts\\simulate-create-session.mjs && node --check scripts\\quote-next-actions.mjs && node --check scripts\\submit-demo-constraints.mjs && node --check scripts\\request-demo-review.mjs && node --check scripts\\refund-expired.mjs && npm --workspace frontend run check",
+ "check": "set PYTHONUTF8=1&& .\\.venv\\Scripts\\python.exe scripts\\genvm_lint_rc.py check contracts\\bridge_draft.py && .\\.venv\\Scripts\\pytest.exe tests\\direct -v && node --check scripts\\deploy-studio-dev.mjs && node --check scripts\\simulate-create-session.mjs && node --check scripts\\create-demo-session.mjs && node --check scripts\\quote-next-actions.mjs && node --check scripts\\submit-demo-constraints.mjs && node --check scripts\\request-demo-review.mjs && node --check scripts\\ratify-demo.mjs && node --check scripts\\withdraw-demo.mjs && node --check scripts\\refund-expired.mjs && npm --workspace frontend run check",
  "deploy:studio-dev": "node scripts\\deploy-studio-dev.mjs --confirm-network-write",
  "deploy:studio-dev:replace": "node scripts\\deploy-studio-dev.mjs --confirm-network-write --replace-active-revision",
  "quote:deployment": "node scripts\\deploy-studio-dev.mjs --quote-only",
  "simulate:create-session": "node scripts\\simulate-create-session.mjs",
+ "create:demo-session": "node scripts\\create-demo-session.mjs --confirm-network-write",
  "quote:next-actions": "node scripts\\quote-next-actions.mjs",
  "submit:demo-constraints": "node scripts\\submit-demo-constraints.mjs --confirm-network-write",
  "review:demo": "node scripts\\request-demo-review.mjs --confirm-network-write",
+ "ratify:demo": "node scripts\\ratify-demo.mjs --confirm-network-write",
+ "withdraw:demo": "node scripts\\withdraw-demo.mjs --confirm-network-write",
  "refund:expired-demo": "node scripts\\refund-expired.mjs --confirm-network-write",
  "check:studio-dev": "node scripts\\check-studio-dev.mjs",
  "recover:studio-dev": "node scripts\\recover-studio-dev-deployment.mjs",
+ "recover:studio-dev:replace": "node scripts\\recover-studio-dev-deployment.mjs --replace-active-revision",
     "build": "npm --workspace frontend run build"
   }
 }

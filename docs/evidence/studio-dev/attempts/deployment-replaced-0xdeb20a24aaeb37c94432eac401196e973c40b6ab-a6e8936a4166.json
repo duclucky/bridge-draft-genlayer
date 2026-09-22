@@ -1,0 +1,14 @@
+{
+  "network": "Studio Dev",
+  "chain_id": 61997,
+  "rpc": "https://studio-next.genlayer.com/api",
+  "explorer": "https://explorer-studio-dev.genlayer.com/",
+  "status": "FINALIZED_SUCCESS",
+  "deployment_tx": "0x1db67bcbbcffc9badd8657aba018c0a04ed1814e9b8206e9fd1a2d7ed08b9d11",
+  "contract_address": "0xdEB20a24aAeB37c94432Eac401196e973C40B6Ab",
+  "source_commit": "a158efd2b28e911cf5109da9a5f276d61952f739",
+  "source_sha256": "a6e8936a4166d54ecf9009601e553204d4dda91dc7a888ff522443f95bddbda8",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "archived_status": "REPLACED_PENDING_REFUND",
+  "replacement_reason": "Consensus review finalized UNDETERMINED twice; canonical state stayed unchanged."
+}
