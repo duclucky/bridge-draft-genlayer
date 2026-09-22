@@ -326,6 +326,10 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 - [x] Studio Dev deployment finalized and its BridgeDraft schema was read back from the deployed address.
 - [x] Browser-wallet sponsor creation was confirmed on Studio Dev; the active revision's full lifecycle is separately labeled script-signed evidence.
 
+## Live app
+
+https://frontend-mauve-two-51.vercel.app
+
 ## Current Studio Dev lifecycle evidence
 
 - Active contract: `0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911)).
