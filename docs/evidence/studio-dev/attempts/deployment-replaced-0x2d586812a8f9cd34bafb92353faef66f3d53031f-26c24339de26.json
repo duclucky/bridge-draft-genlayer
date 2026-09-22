@@ -1,0 +1,30 @@
+{
+  "network": "Studio Dev",
+  "chain_id": 61997,
+  "rpc": "https://studio-next.genlayer.com/api",
+  "explorer": "https://explorer-studio-dev.genlayer.com/",
+  "status": "FINALIZED_SUCCESS",
+  "deployment_tx": "0x279487e662392d5e77bff17e826dc5cf0c313e2fc1e8f5490548977b271c3de0",
+  "contract_address": "0x2D586812a8F9cD34bAfB92353faEF66F3D53031F",
+  "source_commit": "UNCOMMITTED",
+  "source_sha256": "26c24339de26baf790cb7101dbd89a66ff6fb0816af57bad391466f128f27865",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "schema_methods": [
+    "create_session",
+    "get_actionability",
+    "get_credit",
+    "get_draft_digest",
+    "get_session",
+    "get_session_phase",
+    "get_sessions_for_account",
+    "get_terms",
+    "ratify",
+    "refund_expired",
+    "request_review",
+    "retry_review",
+    "submit_constraint",
+    "withdraw_credit"
+  ],
+  "archived_status": "REPLACED_PENDING_REFUND",
+  "replacement_reason": "Consensus review finalized UNDETERMINED twice; canonical state stayed unchanged."
+}

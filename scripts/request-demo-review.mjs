@@ -8,7 +8,7 @@ if (!process.argv.includes('--confirm-network-write')) throw new Error('Refusing
 
 const root = resolve(import.meta.dirname, '..')
 const deployment = JSON.parse(readFileSync(resolve(root, 'docs', 'evidence', 'studio-dev', 'deployment.json'), 'utf8'))
-const attemptPath = resolve(root, 'docs', 'evidence', 'studio-dev', 'review-retry-attempt.json')
+const attemptPath = resolve(root, 'docs', 'evidence', 'studio-dev', `review-attempt-${deployment.contract_address.toLowerCase()}.json`)
 const parse = path => {
   if (!existsSync(path)) return {}
   const values = {}

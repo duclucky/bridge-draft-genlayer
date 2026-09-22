@@ -1,0 +1,11 @@
+{
+  "network": "Studio Dev",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "attempts": [
+    {
+      "role": "B",
+      "transaction_hash": "0x10de74ea1764bff917ea0245daad4198e0838f0b6216db14084809361e266391",
+      "status": "SUBMITTED"
+    }
+  ]
+}

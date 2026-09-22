@@ -174,6 +174,16 @@ def test_validator_accepts_semantically_identical_coverage_in_a_different_order(
     assert direct_vm.run_validator() is True
 
 
+def test_review_prompt_locks_the_coverage_status_enum(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    contract = direct_deploy("contracts/bridge_draft.py")
+    session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    direct_vm.mock_llm(r"Coverage status may only be SATISFIED or UNSATISFIED", json.dumps(json.dumps(_review(session_id))))
+    direct_vm.sender = direct_bob
+    contract.request_review(session_id)
+    assert contract.get_session_phase(session_id) == "BALANCED_DRAFT"
+
+
 def test_retry_requires_retryable_state_and_does_not_move_ledger(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
