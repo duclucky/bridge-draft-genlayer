@@ -4,7 +4,7 @@
 
 - Idea ID: IDEA-034
 - Category: Projects
-- Status: BUILDING (Studio Dev lifecycle finalized; public repository and production hosting remain pending)
+- Status: READY FOR SUBMISSION (Studio Dev lifecycle, public repository, and public production hosting verified)
 - Repository: local child repository `D:\Genlayer Project\bridge-draft`
 - Network: Studio Dev (endpoint/chain parameters require action-time verification)
 
@@ -328,7 +328,7 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 
 ## Live app
 
-https://frontend-mauve-two-51.vercel.app
+https://bridge-draft.vercel.app
 
 ## Current Studio Dev lifecycle evidence
 
@@ -336,6 +336,7 @@ https://frontend-mauve-two-51.vercel.app
 - Session creation: 2 GEN locked, then two terms and one semantic review finalized `BALANCED_DRAFT`.
 - Settlement: both parties ratified; each made one finalized withdrawal of 1 GEN. Canonical terminal read: `RATIFIED`, `locked_gen=0`, `a_credit_gen=0`, `b_credit_gen=0`.
 - Evidence files retain only allowlisted hashes, actor roles, finality, and canonical reads. Browser proof and script-signed proof are intentionally distinct.
+- Two superseded diagnostic revisions are explicitly archived as abandoned after their reviews remained undetermined; no additional value is sent to them, and they are not counted as active-lifecycle evidence.
 
 ## Honest limitations
 
