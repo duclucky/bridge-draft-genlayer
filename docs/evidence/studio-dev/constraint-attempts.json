@@ -3,8 +3,27 @@
   "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
   "attempts": [
     {
+      "role": "A",
+      "action": "submit_constraint",
+      "transaction_hash": "0x6dc0b72a9351bd821cb7eebae952ac120ae4c11415d040ed6c02710efd34cf0b",
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
       "role": "B",
-      "transaction_hash": "0xce1844cb38686ce0e42830ac2cb1cb653c9f4666b58ce7999de57985c0505731",
+      "action": "submit_constraint",
+      "transaction_hash": "0xbcd080bd95cc9e0e7ea5ab68bba9b0d03b279a80d76dea83cd1de7e49e63b4b0",
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
+      "role": "A",
+      "action": "mark_collection_complete",
+      "transaction_hash": "0x5f388435d2faabe12c18925a090d16a12d7c117ca79f765a2379d56d31d878e5",
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
+      "role": "B",
+      "action": "mark_collection_complete",
+      "transaction_hash": "0x85cde0ad0db9e3642b95a9b1c23a96710cfa5ed261d802ec51c619f1a5f6c5a8",
       "status": "FINALIZED_SUCCESS"
     }
   ]

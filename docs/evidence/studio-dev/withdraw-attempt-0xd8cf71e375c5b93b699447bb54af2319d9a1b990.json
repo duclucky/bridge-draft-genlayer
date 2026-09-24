@@ -1,0 +1,24 @@
+{
+  "network": "Studio Dev",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "attempts": [
+    {
+      "role": "A",
+      "transaction_hash": "0x7ff090068026ed27c4834d5d887c797736d3aab63c6e505150502386a60b345f",
+      "transfer_gen": 1,
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
+      "role": "B",
+      "transaction_hash": "0x7a44c5af83c933fbf4c51941d90647b327af917e2c33cab433cd603ca82fb5c9",
+      "transfer_gen": 1,
+      "status": "FINALIZED_SUCCESS"
+    }
+  ],
+  "canonical_state": {
+    "phase": "RATIFIED",
+    "locked_gen": 0,
+    "a_credit_gen": 0,
+    "b_credit_gen": 0
+  }
+}

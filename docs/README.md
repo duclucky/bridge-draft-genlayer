@@ -335,11 +335,12 @@ https://bridge-draft.vercel.app
 
 ## Current Studio Dev lifecycle evidence
 
-- Active contract: `0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911)).
-- Session creation: 2 GEN locked, then two terms and one semantic review finalized `BALANCED_DRAFT`.
+- Active contract: `0xD8CF71e375C5B93b699447bb54Af2319d9a1b990` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0xD8CF71e375C5B93b699447bb54Af2319d9a1b990)).
+- Session creation: 2 GEN locked; Party A and Party B each finalized one term and an independent collection-completion transaction before semantic review finalized `BALANCED_DRAFT`.
 - Settlement: both parties ratified; each made one finalized withdrawal of 1 GEN. Canonical terminal read: `RATIFIED`, `locked_gen=0`, `a_credit_gen=0`, `b_credit_gen=0`.
 - Evidence files retain only allowlisted hashes, actor roles, finality, and canonical reads. Browser proof and script-signed proof are intentionally distinct.
 - Two superseded diagnostic revisions are explicitly archived as abandoned after their reviews remained undetermined; no additional value is sent to them, and they are not counted as active-lifecycle evidence.
+- The prior successful revision is archived as settled and replaced solely for the reviewer-requested bilateral collection-completion rule.
 
 ## Honest limitations
 

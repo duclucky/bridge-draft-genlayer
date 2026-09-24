@@ -28,7 +28,8 @@ const accountFor = keyName => {
 const rpc = 'https://studio-next.genlayer.com/api'
 const chain = { ...studioDevnet, id: 61997, rpcUrls: { default: { http: [rpc] } } }
 const reader = createClient({ chain, endpoint: rpc })
-const attempts = []
+const storedAttempt = existsSync(attemptPath) ? JSON.parse(readFileSync(attemptPath, 'utf8')) : {}
+const attempts = Array.isArray(storedAttempt.attempts) ? storedAttempt.attempts : []
 const send = async (role, account) => {
   const client = createClient({ chain, endpoint: rpc, account })
   const write = { address: deployment.contract_address, functionName: 'withdraw_credit', args: [sessionId] }
@@ -48,4 +49,5 @@ if (initial.a_credit_gen === 1) await send('A', accountFor('STUDIONET_INTEGRATOR
 const afterA = await reader.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
 if (afterA.b_credit_gen === 1) await send('B', accountFor('STUDIONET_STEWARD_PRIVATE_KEY'))
 const finalSession = await reader.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
+writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', session_id: sessionId, attempts, canonical_state: { phase: finalSession.phase, locked_gen: finalSession.locked_gen, a_credit_gen: finalSession.a_credit_gen, b_credit_gen: finalSession.b_credit_gen } }, null, 2) + '\n', 'utf8')
 process.stdout.write(JSON.stringify({ network: 'Studio Dev', session_id: sessionId, submitted: attempts, phase: finalSession.phase, locked_gen: finalSession.locked_gen, a_credit_gen: finalSession.a_credit_gen, b_credit_gen: finalSession.b_credit_gen }) + '\n')

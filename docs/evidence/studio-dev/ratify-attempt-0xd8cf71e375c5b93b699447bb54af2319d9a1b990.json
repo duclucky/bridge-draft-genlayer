@@ -1,0 +1,21 @@
+{
+  "network": "Studio Dev",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "attempts": [
+    {
+      "role": "A",
+      "transaction_hash": "0xa7e3e6d65aff0b58aaab48f9f52eda49b4c4d9281b02d7d9e0d4722cdfac7378",
+      "status": "FINALIZED_SUCCESS"
+    },
+    {
+      "role": "B",
+      "transaction_hash": "0xa4616790fb0bf8f94ae0a57d9869d6dc04174863402f307b707961ea9e19864e",
+      "status": "FINALIZED_SUCCESS"
+    }
+  ],
+  "canonical_state": {
+    "phase": "RATIFIED",
+    "a_credit_gen": 0,
+    "b_credit_gen": 0
+  }
+}

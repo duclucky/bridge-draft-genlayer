@@ -1,7 +1,6 @@
 {
   "network": "Studio Dev",
-  "status": "FAILED",
-  "deployment_tx": "0xbc5e21361027e793888dbda551bbe4c6207197ae498c1917f9dbba7e25ab70cc",
-  "fee": "0.100000000000010352 GEN",
-  "error": "Timed out waiting for transaction 0xbc5e21361027e793888dbda551bbe4c6207197ae498c1917f9dbba7e25ab70cc to reach \"finalized\" (current status: 5)."
+  "status": "FINALIZED_SUCCESS",
+  "deployment_tx": "0xbfdf693648bd7a07d1c94a59813b784d77faeed00ecf22502db4fb245c043a99",
+  "fee": "0.100000000000010352 GEN"
 }

@@ -28,7 +28,8 @@ const accountFor = keyName => {
 const rpc = 'https://studio-next.genlayer.com/api'
 const chain = { ...studioDevnet, id: 61997, rpcUrls: { default: { http: [rpc] } } }
 const reader = createClient({ chain, endpoint: rpc })
-const attempts = []
+const storedAttempt = existsSync(attemptPath) ? JSON.parse(readFileSync(attemptPath, 'utf8')) : {}
+const attempts = Array.isArray(storedAttempt.attempts) ? storedAttempt.attempts : []
 const send = async (role, account, digest) => {
   const client = createClient({ chain, endpoint: rpc, account })
   const write = { address: deployment.contract_address, functionName: 'ratify', args: [sessionId, digest] }
@@ -43,9 +44,10 @@ const send = async (role, account, digest) => {
   writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', session_id: sessionId, attempts }, null, 2) + '\n', 'utf8')
 }
 const initial = await reader.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
-if (initial.phase !== 'BALANCED_DRAFT' && initial.phase !== 'A_RATIFIED' && initial.phase !== 'B_RATIFIED') throw new Error('Session is not legally ratifiable.')
-if (!initial.a_ratified) await send('A', accountFor('STUDIONET_INTEGRATOR_PRIVATE_KEY'), initial.draft_digest)
+if (initial.phase !== 'RATIFIED' && initial.phase !== 'BALANCED_DRAFT' && initial.phase !== 'A_RATIFIED' && initial.phase !== 'B_RATIFIED') throw new Error('Session is not legally ratifiable.')
+if (initial.phase !== 'RATIFIED' && !initial.a_ratified) await send('A', accountFor('STUDIONET_INTEGRATOR_PRIVATE_KEY'), initial.draft_digest)
 const afterA = await reader.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
-if (!afterA.b_ratified) await send('B', accountFor('STUDIONET_STEWARD_PRIVATE_KEY'), afterA.draft_digest)
+if (afterA.phase !== 'RATIFIED' && !afterA.b_ratified) await send('B', accountFor('STUDIONET_STEWARD_PRIVATE_KEY'), afterA.draft_digest)
 const finalSession = await reader.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
+writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', session_id: sessionId, attempts, canonical_state: { phase: finalSession.phase, a_credit_gen: finalSession.a_credit_gen, b_credit_gen: finalSession.b_credit_gen } }, null, 2) + '\n', 'utf8')
 process.stdout.write(JSON.stringify({ network: 'Studio Dev', session_id: sessionId, submitted: attempts, phase: finalSession.phase, a_credit_gen: finalSession.a_credit_gen, b_credit_gen: finalSession.b_credit_gen }) + '\n')

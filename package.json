@@ -4,7 +4,7 @@
   "type": "module",
   "workspaces": ["frontend"],
   "scripts": {
- "check": "set PYTHONUTF8=1&& .\\.venv\\Scripts\\python.exe scripts\\genvm_lint_rc.py check contracts\\bridge_draft.py && .\\.venv\\Scripts\\pytest.exe tests\\direct -v && node --check scripts\\deploy-studio-dev.mjs && node --check scripts\\simulate-create-session.mjs && node --check scripts\\create-demo-session.mjs && node --check scripts\\quote-next-actions.mjs && node --check scripts\\submit-demo-constraints.mjs && node --check scripts\\request-demo-review.mjs && node --check scripts\\ratify-demo.mjs && node --check scripts\\withdraw-demo.mjs && node --check scripts\\refund-expired.mjs && npm --workspace frontend run check",
+ "check": "set PYTHONUTF8=1&& .\\.venv\\Scripts\\python.exe scripts\\genvm_lint_rc.py check contracts\\bridge_draft.py && .\\.venv\\Scripts\\pytest.exe tests\\direct -v && node --check scripts\\deploy-studio-dev.mjs && node --check scripts\\recover-studio-dev-deployment.mjs && node --check scripts\\simulate-create-session.mjs && node --check scripts\\create-demo-session.mjs && node --check scripts\\quote-next-actions.mjs && node --check scripts\\submit-demo-constraints.mjs && node --check scripts\\request-demo-review.mjs && node --check scripts\\ratify-demo.mjs && node --check scripts\\withdraw-demo.mjs && node --check scripts\\refund-expired.mjs && npm --workspace frontend run check",
  "deploy:studio-dev": "node scripts\\deploy-studio-dev.mjs --confirm-network-write",
  "deploy:studio-dev:replace": "node scripts\\deploy-studio-dev.mjs --confirm-network-write --replace-active-revision",
  "quote:deployment": "node scripts\\deploy-studio-dev.mjs --quote-only",

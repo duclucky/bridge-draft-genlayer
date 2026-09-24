@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/genlayer-rpc",
+      "destination": "https://studio-next.genlayer.com/api"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

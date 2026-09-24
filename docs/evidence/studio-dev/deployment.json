@@ -4,25 +4,9 @@
   "rpc": "https://studio-next.genlayer.com/api",
   "explorer": "https://explorer-studio-dev.genlayer.com/",
   "status": "FINALIZED_SUCCESS",
-  "deployment_tx": "0xbc5e21361027e793888dbda551bbe4c6207197ae498c1917f9dbba7e25ab70cc",
-  "contract_address": "0x362Ef1dCDe3f2779DB9c984d3ab5b8859AD73911",
-  "source_commit": "e6d56aacc38cc6efbcc6285c4fd6ca0bce5f9950",
-  "source_sha256": "6219a9d61537d71993b13615df38431a6629503235a9bc54755e25577ce51ba4",
-  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
-  "schema_methods": [
-    "create_session",
-    "get_actionability",
-    "get_credit",
-    "get_draft_digest",
-    "get_session",
-    "get_session_phase",
-    "get_sessions_for_account",
-    "get_terms",
-    "ratify",
-    "refund_expired",
-    "request_review",
-    "retry_review",
-    "submit_constraint",
-    "withdraw_credit"
-  ]
+  "deployment_tx": "0xbfdf693648bd7a07d1c94a59813b784d77faeed00ecf22502db4fb245c043a99",
+  "contract_address": "0xD8CF71e375C5B93b699447bb54Af2319d9a1b990",
+  "source_commit": "d0cd0d9c352fa94fdbc3380f3a67c76380831017",
+  "source_sha256": "4934a049a6bcdcc87437772867c01caec54230a344f9ee3ac960b538c7b5586f",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng"
 }

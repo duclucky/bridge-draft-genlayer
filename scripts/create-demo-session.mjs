@@ -25,6 +25,28 @@ const account = createAccount(key)
 const rpc = 'https://studio-next.genlayer.com/api'
 const chain = { ...studioDevnet, id: 61997, rpcUrls: { default: { http: [rpc] } } }
 const client = createClient({ chain, endpoint: rpc, account })
+const sponsor = '0xc495ef51618d03267a1f227afe5b27b38c748272'
+const saveFinalized = async hash => {
+  const sessions = await client.readContract({ address: deployment.contract_address, functionName: 'get_sessions_for_account', args: [sponsor] })
+  const sessionId = sessions[sessions.length - 1]
+  const session = await client.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
+  writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', contract_address: deployment.contract_address, transaction_hash: hash, status: 'FINALIZED_SUCCESS', session_id: sessionId, phase: session.phase ?? null, locked_gen: session.locked_gen ?? null }, null, 2) + '\n', 'utf8')
+  process.stdout.write(JSON.stringify({ network: 'Studio Dev', transaction_hash: hash, status: 'FINALIZED_SUCCESS', session_id: sessionId, phase: session.phase ?? null, locked_gen: session.locked_gen ?? null }) + '\n')
+}
+if (existsSync(attemptPath)) {
+  const previous = JSON.parse(readFileSync(attemptPath, 'utf8'))
+  if (previous.status === 'FINALIZED_SUCCESS') {
+    process.stdout.write(JSON.stringify(previous) + '\n')
+    process.exit(0)
+  }
+  if (previous.status === 'SUBMITTED' && /^0x[0-9a-fA-F]{64}$/.test(previous.transaction_hash ?? '')) {
+    const transaction = await client.request({ method: 'eth_getTransactionByHash', params: [previous.transaction_hash] })
+    if (transaction?.status !== 'FINALIZED') throw new Error(`Existing session creation is still ${transaction?.status ?? 'UNKNOWN'}; no replacement transaction was sent.`)
+    if (transaction.txExecutionResultName !== 'FINISHED_WITH_RETURN') throw new Error('Existing session creation finalized without successful execution; no replacement transaction was sent.')
+    await saveFinalized(previous.transaction_hash)
+    process.exit(0)
+  }
+}
 const now = Math.floor(Date.now() / 1000)
 const write = {
   address: deployment.contract_address,
@@ -38,9 +60,4 @@ mkdirSync(dirname(attemptPath), { recursive: true })
 writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', contract_address: deployment.contract_address, transaction_hash: hash, status: 'SUBMITTED' }, null, 2) + '\n', 'utf8')
 const receipt = await client.waitForFinalization({ hash, fullTransaction: false })
 if (!isSuccessful(receipt)) throw new Error('Session creation finalized without successful execution.')
-const sponsor = '0xc495ef51618d03267a1f227afe5b27b38c748272'
-const sessions = await client.readContract({ address: deployment.contract_address, functionName: 'get_sessions_for_account', args: [sponsor] })
-const sessionId = sessions[sessions.length - 1]
-const session = await client.readContract({ address: deployment.contract_address, functionName: 'get_session', args: [sessionId] })
-writeFileSync(attemptPath, JSON.stringify({ network: 'Studio Dev', contract_address: deployment.contract_address, transaction_hash: hash, status: 'FINALIZED_SUCCESS', session_id: sessionId, phase: session.phase ?? null, locked_gen: session.locked_gen ?? null }, null, 2) + '\n', 'utf8')
-process.stdout.write(JSON.stringify({ network: 'Studio Dev', transaction_hash: hash, status: 'FINALIZED_SUCCESS', session_id: sessionId, phase: session.phase ?? null, locked_gen: session.locked_gen ?? null }) + '\n')
+await saveFinalized(hash)
