@@ -91,8 +91,9 @@ if (!quoteOnly && existsSync(evidencePath)) {
       mkdirSync(dirname(archivePath), { recursive: true })
       writeFileSync(archivePath, JSON.stringify({
         ...previous,
-        archived_status: 'REPLACED_SETTLED',
-        replacement_reason: 'Replaced after reviewer requested bilateral collection completion; prior active lifecycle was settled with zero remaining accounting.',
+        archived_status: 'ABANDONED_BROKEN_TRANSFER',
+        replacement_reason: 'The internal ledger recorded both withdrawals, but the revision used gl.chain.Account instead of the EOA external-message interface. Its 2 GEN native balance has no remaining recovery path; do not send further value.',
+        remaining_contract_balance_gen: 2,
       }, null, 2) + '\n', 'utf8')
     }
   }

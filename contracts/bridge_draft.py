@@ -1,4 +1,4 @@
-# v0.4.0
+# v0.5.0
 # { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 import json
 from datetime import datetime, timezone
@@ -65,6 +65,15 @@ def coverage_is_equivalent(left: list[dict], right: list[dict]) -> bool:
     for item in right:
         right_by_id[item["term_id"]] = item["status"]
     return left_by_id == right_by_id
+
+
+@gl.evm.contract_interface
+class EoaRecipient:
+    class View:
+        pass
+
+    class Write:
+        pass
 
 
 class BridgeDraftContract(gl.contract.Contract):
@@ -394,7 +403,7 @@ class BridgeDraftContract(gl.contract.Contract):
                 self._error("credit invariant failed")
             self.withdrawn_bs[session_id] = True
             self.credit_bs[session_id] = 0
-        gl.chain.Account(gl.message.sender_address).emit_transfer(GEN, on="finalized")
+        EoaRecipient(gl.message.sender_address).emit_transfer(value=u256(GEN))
 
     @gl.public.write
     def refund_expired(self, session_id: str) -> None:
@@ -414,7 +423,7 @@ class BridgeDraftContract(gl.contract.Contract):
         self.refunds_paid[session_id] = True
         self.locked_values[session_id] = 0
         self.phases[session_id] = "EXPIRED_REFUNDED"
-        gl.chain.Account(gl.message.sender_address).emit_transfer(SESSION_BUDGET, on="finalized")
+        EoaRecipient(gl.message.sender_address).emit_transfer(value=u256(SESSION_BUDGET))
 
     @gl.public.view
     def get_session_phase(self, session_id: str) -> str:
