@@ -7,7 +7,7 @@ SOURCE = Path("contracts/bridge_draft.py")
 def test_contract_source_is_ascii_pinned_and_has_one_visible_contract_class():
     raw = SOURCE.read_bytes()
     source = raw.decode("ascii")
-    assert source.startswith('# v0.3.0\n# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }\n')
+    assert source.startswith('# v0.4.0\n# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }\n')
     assert source.count("class BridgeDraftContract(gl.contract.Contract):") == 1
     assert "run_nondet_default" in source
     assert "run_nondet_unsafe" not in source

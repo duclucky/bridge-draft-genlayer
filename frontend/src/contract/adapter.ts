@@ -22,7 +22,7 @@ export type SessionPhase =
   | 'RATIFIED'
   | 'EXPIRED_REFUNDED'
 
-export type ContractAction = 'submit_constraint' | 'request_review' | 'retry_review' | 'ratify' | 'withdraw_credit' | 'refund_expired'
+export type ContractAction = 'submit_constraint' | 'mark_collection_complete' | 'request_review' | 'retry_review' | 'ratify' | 'withdraw_credit' | 'refund_expired'
 
 export type Term = { term_id: string; role: 'A' | 'B'; text: string }
 
@@ -40,6 +40,8 @@ export type SessionSummary = {
   draftDigest: string
   coverage: Array<{ term_id: string; status: 'SATISFIED' | 'UNSATISFIED' }>
   eligibleActions: ContractAction[]
+  aCollectionComplete: boolean
+  bCollectionComplete: boolean
   lockedGen: number
   creditGen: number
   withdrawn: boolean
@@ -56,6 +58,7 @@ export interface BridgeDraftAdapter {
   getTerms(id: string): Promise<Term[]>
   createSession(input: { partyA: string; partyB: string; title: string; collectDeadline: number; ratifyDeadline: number }): Promise<WriteResult>
   submitConstraint(input: { sessionId: string; sequence: number; text: string }): Promise<WriteResult>
+  markCollectionComplete(sessionId: string): Promise<WriteResult>
   requestReview(sessionId: string): Promise<WriteResult>
   retryReview(sessionId: string): Promise<WriteResult>
   ratify(input: { sessionId: string; draftDigest: string }): Promise<WriteResult>
@@ -190,6 +193,8 @@ export function createBridgeDraftAdapter(config: { contractAddress?: string; rpc
       draftDigest: stringField(raw, 'draft_digest'),
       coverage: coverageField(raw.coverage),
       eligibleActions: actionResult as ContractAction[],
+      aCollectionComplete: boolField(raw, 'a_collection_complete'),
+      bCollectionComplete: boolField(raw, 'b_collection_complete'),
       lockedGen: numberField(raw, 'locked_gen'),
       creditGen: numberField(raw, isA ? 'a_credit_gen' : 'b_credit_gen'),
       withdrawn: boolField(raw, isA ? 'a_withdrawn' : 'b_withdrawn'),
@@ -246,6 +251,9 @@ export function createBridgeDraftAdapter(config: { contractAddress?: string; rpc
     },
     submitConstraint(input) {
       return submit('submit_constraint', [input.sessionId, BigInt(input.sequence), input.text])
+    },
+    markCollectionComplete(sessionId) {
+      return submit('mark_collection_complete', [sessionId])
     },
     requestReview(sessionId) {
       return submit('request_review', [sessionId])

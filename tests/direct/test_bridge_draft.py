@@ -40,8 +40,20 @@ def _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie):
     contract.submit_constraint(session_id, 1, "Keep incident handoff observable")
 
 
-def _open_balanced(contract, direct_vm, session_id, direct_bob, direct_charlie):
+def _complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie):
+    direct_vm.sender = direct_bob
+    contract.mark_collection_complete(session_id)
+    direct_vm.sender = direct_charlie
+    contract.mark_collection_complete(session_id)
+
+
+def _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie):
     _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+
+
+def _open_balanced(contract, direct_vm, session_id, direct_bob, direct_charlie):
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)
@@ -90,11 +102,64 @@ def test_review_requires_both_sides_and_exact_coverage_before_balanced_draft(dir
     direct_vm.sender = direct_bob
     with direct_vm.expect_revert("both parties must submit"):
         contract.request_review(session_id)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id, missing=True))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)
     assert contract.get_session_phase(session_id) == "RETRYABLE"
+
+
+def test_one_party_cannot_freeze_out_the_others_remaining_terms(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    contract = direct_deploy("contracts/bridge_draft.py")
+    session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    direct_vm.sender = direct_bob
+    contract.mark_collection_complete(session_id)
+    with direct_vm.expect_revert("both parties must complete collection"):
+        contract.request_review(session_id)
+
+    assert contract.get_session_phase(session_id) == "COLLECTING"
+    assert "submit_constraint" in contract.get_actionability(session_id, to_hex(direct_charlie))
+    direct_vm.sender = direct_charlie
+    contract.submit_constraint(session_id, 2, "Keep the escalation owner named")
+    assert [term["term_id"] for term in contract.get_terms(session_id)][-1] == session_id + ":B:2"
+
+
+def test_collection_completion_is_one_way_and_enforces_its_own_time_boundary(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    contract = direct_deploy("contracts/bridge_draft.py")
+    before_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    exact_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    after_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    for session_id in (before_id, exact_id, after_id):
+        direct_vm.sender = direct_bob
+        contract.submit_constraint(session_id, 1, "Keep the rollback owner named")
+
+    direct_vm.warp("2030-03-17T17:46:39+00:00")
+    contract.mark_collection_complete(before_id)
+    with direct_vm.expect_revert("collection already completed for party"):
+        contract.mark_collection_complete(before_id)
+    with direct_vm.expect_revert("collection already completed for party"):
+        contract.submit_constraint(before_id, 2, "This party already closed its own brief")
+
+    direct_vm.warp("2030-03-17T17:46:40+00:00")
+    with direct_vm.expect_revert("deadline passed"):
+        contract.mark_collection_complete(exact_id)
+    direct_vm.warp("2030-03-17T17:46:41+00:00")
+    with direct_vm.expect_revert("deadline passed"):
+        contract.mark_collection_complete(after_id)
+    assert contract.get_session(exact_id)["a_collection_complete"] is False
+    assert contract.get_session(after_id)["a_collection_complete"] is False
+
+
+def test_collection_deadline_opens_review_without_completion_flags(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    contract = direct_deploy("contracts/bridge_draft.py")
+    session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
+    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    direct_vm.warp("2030-03-17T17:46:40+00:00")
+    direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id))))
+    direct_vm.sender = direct_bob
+    contract.request_review(session_id)
+    assert contract.get_session_phase(session_id) == "BALANCED_DRAFT"
 
 
 def test_two_distinct_ratifications_create_exactly_two_one_gen_credits(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
@@ -162,7 +227,7 @@ def test_validator_rejects_leader_coverage_lie_without_credit(direct_vm, direct_
 def test_validator_accepts_semantically_identical_coverage_in_a_different_order(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)
@@ -177,7 +242,7 @@ def test_validator_accepts_semantically_identical_coverage_in_a_different_order(
 def test_review_prompt_locks_the_coverage_status_enum(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"Coverage status may only be SATISFIED or UNSATISFIED", json.dumps(json.dumps(_review(session_id))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)
@@ -187,7 +252,7 @@ def test_review_prompt_locks_the_coverage_status_enum(direct_vm, direct_deploy, 
 def test_retry_requires_retryable_state_and_does_not_move_ledger(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id, missing=True))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)
@@ -213,7 +278,7 @@ def test_exact_ratification_deadline_rejects_without_creating_credit(direct_vm, 
 def test_unknown_output_key_is_retryable_and_never_changes_ledger(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     malformed = _review(session_id)
     malformed["amount_gen"] = 999
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(malformed)))
@@ -235,7 +300,7 @@ def test_session_index_and_actionability_are_canonical(direct_vm, direct_deploy,
 def test_only_sponsor_can_refund_and_conflict_is_refundable_without_waiting(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
     contract = direct_deploy("contracts/bridge_draft.py")
     session_id = _create(contract, direct_vm, direct_alice, direct_bob, direct_charlie)
-    _submit_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
+    _submit_and_complete_pair(contract, direct_vm, session_id, direct_bob, direct_charlie)
     direct_vm.mock_llm(r"BridgeDraft semantic review", json.dumps(json.dumps(_review(session_id, "CONFLICTING"))))
     direct_vm.sender = direct_bob
     contract.request_review(session_id)

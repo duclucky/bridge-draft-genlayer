@@ -131,7 +131,8 @@ One FAIL means redesign/reject. These gate results do not claim deployment, brow
 ```text
 NEW --create_session(2 GEN)--> COLLECTING
 COLLECTING --Party A/B submit_constraint before collection deadline--> COLLECTING
-COLLECTING --registered party request_review after both have terms--> BALANCED_DRAFT|CONFLICTING|RETRYABLE
+COLLECTING --each party mark_collection_complete after its own terms--> COLLECTING
+COLLECTING --registered party request_review after bilateral completion or collection deadline--> BALANCED_DRAFT|CONFLICTING|RETRYABLE
 RETRYABLE --registered party retry_review before ratify deadline--> BALANCED_DRAFT|CONFLICTING|RETRYABLE
 BALANCED_DRAFT --A or B ratify exact digest--> A_RATIFIED or B_RATIFIED
 A_RATIFIED/B_RATIFIED --other party ratify exact digest--> RATIFIED
@@ -143,13 +144,13 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 ### Temporal entrypoint rules
 
 - Canonical time is the pinned GenVM transaction-time API verified before source implementation.
-- Collection writes require `now < collect_deadline`; review/retry/ratification require `now < ratify_deadline`; equality is late. `refund_expired` requires `now >= ratify_deadline`, except immediately from finalized `CONFLICTING`.
+- Constraint and completion writes require `now < collect_deadline`; review requires bilateral completion while `now < collect_deadline`, or may proceed at/after that deadline; review/retry/ratification still require `now < ratify_deadline`. `refund_expired` requires `now >= ratify_deadline`, except immediately from finalized `CONFLICTING`.
 - Every time-sensitive public method enforces its own condition before mutation. Stale active phase at exact deadline rejects the active write and leaves only recovery.
 - Only sponsor may refund; it requires a non-ratified legal state, unpaid refund flag, and ledger-held refundable amount. Credits are never refunded after `RATIFIED`; owners withdraw independently.
 
 ### Illegal transitions, authorization and idempotency
 
-- Parties, deadlines, terms, sponsor amount, and draft digest are immutable after their legal write. No terminal phase returns to active.
+- Parties, deadlines, terms, per-party completion flags, sponsor amount, and draft digest are immutable after their legal write. A party that marks its own collection complete cannot add another term, but cannot close or restrict the other party's collection. No terminal phase returns to active.
 - `create_session` needs two nonzero, distinct non-sponsor parties; `submit_constraint`, review/retry, ratify, withdrawal, and refund each verify the exact stored role described in the safety matrix.
 - Term `(role,sequence)`, active review, ratification bit, credit creation, withdrawal bit, and refund bit are one-way. Repeated calls reject before value movement.
 
@@ -159,7 +160,8 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `create_session` | sponsor | new | existing ID | N/A; bounded future deadlines | unused nonce/ID | receives exactly `2 * 10**18` (=2 GEN); locked ledger =2 GEN | session, actionability | wrong value, same parties, bad address/deadline, collision |
 | `submit_constraint` | registered A/B | `COLLECTING` | all others | `now < collect_deadline`; equality rejects | unused role/sequence, cap 3 | none | terms/session/actionability | wrong caller/state, -1/exact/+1 boundary, duplicate, cap, malformed |
-| `request_review` | registered A/B | `COLLECTING` with both term counts >=1 | all others | `now < ratify_deadline`; equality rejects | no active review | none | session/result/actionability | wrong caller/state, missing term side, boundaries, malformed outputs |
+| `mark_collection_complete` | registered A/B with own term count >=1 | `COLLECTING` | all others | `now < collect_deadline`; equality rejects | own completion bit must be false | none | session/actionability | wrong caller/state, no own term, duplicate, exact boundary; one side cannot block the other's remaining terms |
+| `request_review` | registered A/B | `COLLECTING` with both term counts >=1 | all others | `now < ratify_deadline`; before collection deadline both completion bits are required; at/after collection deadline they are not | no active review | none | session/result/actionability | wrong caller/state, missing term side, unilateral early review, collection and ratification boundaries, malformed outputs |
 | `retry_review` | registered A/B | `RETRYABLE` | all others | `now < ratify_deadline`; equality rejects | current retryable review only | none | session/result/actionability | wrong caller/state, boundaries, duplicate, accounting unchanged |
 | `ratify` | own A/B | balanced/other-side-ratified | all others | `now < ratify_deadline`; equality rejects | own bit false + digest match | second unique bit creates exactly two 1 GEN credits | session/credit/actionability | wrong caller, stale digest, duplicate, boundaries, no double credit |
 | `withdraw_credit` | credited A/B | `RATIFIED` | all others | N/A: earned credit is non-temporal | own withdrawal false | emits exactly 1 GEN, debits own credit | credit/session accounting | wrong caller/state, duplicate, transfer/accounting invariant |
@@ -171,6 +173,7 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 | --- | --- | --- | --- | --- | --- |
 | no session | sponsor creates | `create_session` | New session form | real-SDK offline wallet preflight | wrapper complete; live write pending authorization/deployment |
 | `COLLECTING` | party saves term | `submit_constraint` | Session action card | TypeScript/build; live browser pending | wrapper complete; no simulated canonical state |
+| `COLLECTING` | party finishes its own brief | `mark_collection_complete` | Session action card | adapter and direct regression checks | wrapper complete; cannot close the other party's collection |
 | `COLLECTING` | party requests review | `request_review` | Session action card | TypeScript/build; live browser pending | wrapper complete; no simulated canonical state |
 | `RETRYABLE` | party retries | `retry_review` | Retry card | TypeScript/build; live browser pending | wrapper complete; no simulated canonical state |
 | balanced ratification | party ratifies | `ratify` | Draft approval card | TypeScript/build; live browser pending | wrapper complete; no simulated canonical state |
@@ -245,7 +248,7 @@ CONFLICTING --sponsor refund--> EXPIRED_REFUNDED
 ### Write methods
 
 - `create_session(party_a, party_b, title, collect_deadline, ratify_deadline)` payable with exactly 2 GEN; party addresses are validated canonical `0x` EVM-address strings.
-- `submit_constraint(session_id, sequence, text)`; `request_review(session_id)`; `retry_review(session_id)`.
+- `submit_constraint(session_id, sequence, text)`; `mark_collection_complete(session_id)`; `request_review(session_id)`; `retry_review(session_id)`.
 - `ratify(session_id, draft_digest)`; `withdraw_credit(session_id)`; `refund_expired(session_id)`.
 
 ### View methods

@@ -47,6 +47,7 @@ describe('BridgeDraft SDK wallet preflight', () => {
     const adapter = createBridgeDraftAdapter({ contractAddress: CONTRACT, account: ACCOUNT, provider })
 
     await adapter.createSession({ partyA: PARTY_A, partyB: PARTY_B, title: 'handoff', collectDeadline: 1_900_000_000, ratifyDeadline: 1_900_003_600 })
+    await adapter.markCollectionComplete('session-1')
 
     const submission = providerCalls.find(call => call.method === 'eth_sendTransaction')
     expect(submission).toBeDefined()
@@ -54,7 +55,7 @@ describe('BridgeDraft SDK wallet preflight', () => {
     expect(transaction.from).toBe(ACCOUNT)
     expect(transaction.to).not.toBe(CONTRACT)
     expect(BigInt(transaction.value)).toBeGreaterThan(2n * GEN)
-    expect(providerCalls.some(call => call.method === 'eth_sendTransaction')).toBe(true)
+    expect(providerCalls.filter(call => call.method === 'eth_sendTransaction')).toHaveLength(2)
     expect(fetchMock.mock.calls.some(([, init]) => JSON.parse(String((init as RequestInit | undefined)?.body)).method === 'sim_getFeeConfig')).toBe(true)
     expect(fetchMock).toHaveBeenCalled()
   })

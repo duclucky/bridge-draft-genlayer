@@ -21,7 +21,7 @@ if (existsSync(evidencePath)) {
   const archivePath = resolve(root, 'docs', 'evidence', 'studio-dev', 'attempts', `deployment-replaced-${previous.contract_address.toLowerCase()}-${String(previous.source_sha256 ?? 'unknown').slice(0, 12)}.json`)
   if (!existsSync(archivePath)) {
     mkdirSync(dirname(archivePath), { recursive: true })
-    writeFileSync(archivePath, JSON.stringify({ ...previous, archived_status: 'REPLACED_PENDING_REFUND', replacement_reason: 'Schema-prompt revision deployed after repeated review consensus failure.' }, null, 2) + '\n', 'utf8')
+    writeFileSync(archivePath, JSON.stringify({ ...previous, archived_status: 'REPLACED_SETTLED', replacement_reason: 'Replaced after reviewer requested bilateral collection completion; prior active lifecycle was settled with zero remaining accounting.' }, null, 2) + '\n', 'utf8')
   }
 }
 if (!existsSync(attemptPath)) throw new Error('No deployment attempt is available for recovery.')
@@ -33,7 +33,7 @@ if (!transaction || transaction.status !== 'FINALIZED' || transaction.txExecutio
 const contractAddress = transaction.recipient
 if (typeof contractAddress !== 'string' || !/^0x[0-9a-fA-F]{40}$/.test(contractAddress)) throw new Error('The successful deployment transaction has no valid contract recipient.')
 const schema = await client.request({ method: 'gen_getContractSchema', params: [contractAddress] })
-if (!schema?.methods?.create_session || !schema?.methods?.get_session || !schema?.methods?.withdraw_credit) throw new Error('The recipient schema is not BridgeDraft.')
+if (!schema?.methods?.create_session || !schema?.methods?.mark_collection_complete || !schema?.methods?.get_session || !schema?.methods?.withdraw_credit) throw new Error('The recipient schema is not BridgeDraft v0.4.')
 const source = readFileSync(resolve(root, 'contracts', 'bridge_draft.py'), 'utf8')
 let commit = 'UNCOMMITTED'
 try { commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() } catch {}

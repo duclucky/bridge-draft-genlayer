@@ -32,7 +32,11 @@ const quote = async (account, functionName, args) => {
   return fraction ? `${whole}.${fraction} GEN` : `${whole} GEN`
 }
 try {
-  const quotes = { party_a_request_review: await quote(partyA, 'request_review', [sessionId]) }
+  const quotes = {
+    party_a_complete_collection: await quote(partyA, 'mark_collection_complete', [sessionId]),
+    party_b_complete_collection: await quote(partyB, 'mark_collection_complete', [sessionId]),
+    party_a_request_review: await quote(partyA, 'request_review', [sessionId]),
+  }
   process.stdout.write(JSON.stringify({ network: 'Studio Dev', session_id: sessionId, quotes }) + '\n')
 } catch (error) {
   const message = error instanceof Error ? error.shortMessage ?? error.message : 'Unknown quote failure.'

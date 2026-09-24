@@ -1,4 +1,4 @@
-# v0.3.0
+# v0.4.0
 # { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 import json
 from datetime import datetime, timezone
@@ -93,6 +93,8 @@ class BridgeDraftContract(gl.contract.Contract):
     refunds_paid: gl.storage.TreeMap[str, bool]
     participant_counts: gl.storage.TreeMap[str, u256]
     participant_session_ids: gl.storage.TreeMap[str, str]
+    collection_completed_as: gl.storage.TreeMap[str, bool]
+    collection_completed_bs: gl.storage.TreeMap[str, bool]
 
     def __init__(self) -> None:
         self.session_nonce = 0
@@ -264,6 +266,8 @@ class BridgeDraftContract(gl.contract.Contract):
         self.withdrawn_as[session_id] = False
         self.withdrawn_bs[session_id] = False
         self.refunds_paid[session_id] = False
+        self.collection_completed_as[session_id] = False
+        self.collection_completed_bs[session_id] = False
         self._index_session(sponsor, session_id)
         self._index_session(party_a_text, session_id)
         self._index_session(party_b_text, session_id)
@@ -280,6 +284,10 @@ class BridgeDraftContract(gl.contract.Contract):
         if len(text) == 0 or len(text) > 280 or not text.isascii():
             self._error("invalid constraint")
         role = self._require_party(session_id)
+        if (role == "A" and self.collection_completed_as.get(session_id)) or (
+            role == "B" and self.collection_completed_bs.get(session_id)
+        ):
+            self._error("collection already completed for party")
         count = int(self.term_counts_a.get(session_id) or 0) if role == "A" else int(self.term_counts_b.get(session_id) or 0)
         if int(sequence) != count + 1:
             self._error("sequence must be next")
@@ -293,6 +301,25 @@ class BridgeDraftContract(gl.contract.Contract):
             self.term_counts_b[session_id] = int(sequence)
 
     @gl.public.write
+    def mark_collection_complete(self, session_id: str) -> None:
+        self._require_session(session_id)
+        if self.phases.get(session_id) != "COLLECTING":
+            self._error("collecting required")
+        self._require_before(self.collect_deadlines.get(session_id))
+        role = self._require_party(session_id)
+        count = int(self.term_counts_a.get(session_id) or 0) if role == "A" else int(self.term_counts_b.get(session_id) or 0)
+        if count == 0:
+            self._error("own constraint required")
+        if role == "A":
+            if self.collection_completed_as.get(session_id):
+                self._error("collection already completed for party")
+            self.collection_completed_as[session_id] = True
+        else:
+            if self.collection_completed_bs.get(session_id):
+                self._error("collection already completed for party")
+            self.collection_completed_bs[session_id] = True
+
+    @gl.public.write
     def request_review(self, session_id: str) -> None:
         self._require_session(session_id)
         self._require_party(session_id)
@@ -301,6 +328,10 @@ class BridgeDraftContract(gl.contract.Contract):
         self._require_before(self.ratify_deadlines.get(session_id))
         if int(self.term_counts_a.get(session_id) or 0) == 0 or int(self.term_counts_b.get(session_id) or 0) == 0:
             self._error("both parties must submit")
+        if self._now() < int(self.collect_deadlines.get(session_id)) and not (
+            self.collection_completed_as.get(session_id) and self.collection_completed_bs.get(session_id)
+        ):
+            self._error("both parties must complete collection or wait for deadline")
         self._review(session_id)
 
     @gl.public.write
@@ -423,6 +454,8 @@ class BridgeDraftContract(gl.contract.Contract):
             "coverage": self.coverage_json.get(session_id) or "[]",
             "a_ratified": self.ratified_as.get(session_id),
             "b_ratified": self.ratified_bs.get(session_id),
+            "a_collection_complete": self.collection_completed_as.get(session_id),
+            "b_collection_complete": self.collection_completed_bs.get(session_id),
             "locked_gen": int(self.locked_values.get(session_id) or 0) // GEN,
             "a_credit_gen": int(self.credit_as.get(session_id) or 0) // GEN,
             "b_credit_gen": int(self.credit_bs.get(session_id) or 0) // GEN,
@@ -461,9 +494,16 @@ class BridgeDraftContract(gl.contract.Contract):
         before_ratify = self._now() < int(self.ratify_deadlines.get(session_id))
         if phase == "COLLECTING" and is_party:
             count = int(self.term_counts_a.get(session_id) or 0) if is_a else int(self.term_counts_b.get(session_id) or 0)
-            if before_collect and count < MAX_TERMS:
+            own_complete = self.collection_completed_as.get(session_id) if is_a else self.collection_completed_bs.get(session_id)
+            if before_collect and not own_complete and count < MAX_TERMS:
                 actions.append("submit_constraint")
-            if before_ratify and int(self.term_counts_a.get(session_id) or 0) > 0 and int(self.term_counts_b.get(session_id) or 0) > 0:
+            if before_collect and not own_complete and count > 0:
+                actions.append("mark_collection_complete")
+            both_have_terms = int(self.term_counts_a.get(session_id) or 0) > 0 and int(self.term_counts_b.get(session_id) or 0) > 0
+            collection_ready = (not before_collect) or (
+                self.collection_completed_as.get(session_id) and self.collection_completed_bs.get(session_id)
+            )
+            if before_ratify and both_have_terms and collection_ready:
                 actions.append("request_review")
         if phase == "RETRYABLE" and is_party and before_ratify:
             actions.append("retry_review")

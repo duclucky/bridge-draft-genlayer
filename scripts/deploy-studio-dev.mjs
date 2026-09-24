@@ -91,8 +91,8 @@ if (!quoteOnly && existsSync(evidencePath)) {
       mkdirSync(dirname(archivePath), { recursive: true })
       writeFileSync(archivePath, JSON.stringify({
         ...previous,
-        archived_status: 'REPLACED_PENDING_REFUND',
-        replacement_reason: 'Consensus review finalized UNDETERMINED twice; canonical state stayed unchanged.',
+        archived_status: 'REPLACED_SETTLED',
+        replacement_reason: 'Replaced after reviewer requested bilateral collection completion; prior active lifecycle was settled with zero remaining accounting.',
       }, null, 2) + '\n', 'utf8')
     }
   }
