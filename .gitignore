@@ -9,3 +9,6 @@ __pycache__/
 artifacts/
 coverage/
 *.tsbuildinfo
+precheck-report.json
+precheck-report.txt
+grade-report.json

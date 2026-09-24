@@ -1,0 +1,38 @@
+{
+  "network": "Studio Dev",
+  "contract_address": "0xb49039e50e549E3c93Cf2303D07740698e8de7ef",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "attempts": [
+    {
+      "role": "A",
+      "recipient": "0x45aD397c438397A702B53a7499a78D08961D39Db",
+      "transaction_hash": "0x9dba8c5cd66b5b5ca645cbd72ac044b792bbc0b871df8c1401cfd4e4b8ed0fa1",
+      "transfer_gen": 1,
+      "status": "FINALIZED_SUCCESS",
+      "contract_balance_before_gen": 2,
+      "recipient_balance_before_gen": "17.661558050666665400",
+      "contract_balance_after_gen": 1,
+      "recipient_balance_after_gen": "18.661431745916664577",
+      "recipient_net_delta_gen": "0.999873695249999177"
+    },
+    {
+      "role": "B",
+      "recipient": "0x45248be151F7f7e230150db23774733Cd966Eb45",
+      "transaction_hash": "0xe74c4197fb1631d2cb245ca53be808be97679c9bcfba36588971734870b44fce",
+      "transfer_gen": 1,
+      "status": "FINALIZED_SUCCESS",
+      "contract_balance_before_gen": 1,
+      "recipient_balance_before_gen": "0.998413641950030954",
+      "contract_balance_after_gen": 0,
+      "recipient_balance_after_gen": "1.998287337200030131",
+      "recipient_net_delta_gen": "0.999873695249999177"
+    }
+  ],
+  "canonical_state": {
+    "phase": "RATIFIED",
+    "locked_gen": 0,
+    "a_credit_gen": 0,
+    "b_credit_gen": 0,
+    "contract_balance_gen": 0
+  }
+}

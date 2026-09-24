@@ -1,0 +1,9 @@
+{
+  "network": "Studio Dev",
+  "contract_address": "0xb49039e50e549E3c93Cf2303D07740698e8de7ef",
+  "transaction_hash": "0x8b43a2df53e7b331d944bbc21dc1cc406af41ec28c55a7bd0f8e0236010db04d",
+  "status": "FINALIZED_SUCCESS",
+  "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
+  "phase": "COLLECTING",
+  "locked_gen": 2
+}

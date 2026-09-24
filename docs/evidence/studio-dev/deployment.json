@@ -4,9 +4,9 @@
   "rpc": "https://studio-next.genlayer.com/api",
   "explorer": "https://explorer-studio-dev.genlayer.com/",
   "status": "FINALIZED_SUCCESS",
-  "deployment_tx": "0xbfdf693648bd7a07d1c94a59813b784d77faeed00ecf22502db4fb245c043a99",
-  "contract_address": "0xD8CF71e375C5B93b699447bb54Af2319d9a1b990",
-  "source_commit": "d0cd0d9c352fa94fdbc3380f3a67c76380831017",
-  "source_sha256": "4934a049a6bcdcc87437772867c01caec54230a344f9ee3ac960b538c7b5586f",
+  "deployment_tx": "0xd412ba2a30e4247c43ca6403091759b6ce753a75a9ed54ba123158100f29f9f2",
+  "contract_address": "0xb49039e50e549E3c93Cf2303D07740698e8de7ef",
+  "source_commit": "dc0a41bf69ff93f222b69e93eedb7c9d05d72265",
+  "source_sha256": "ec2098cf4b5e9d1a005f14760d1034da1974942d4c71f811cb9c5e513f3d18e9",
   "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng"
 }

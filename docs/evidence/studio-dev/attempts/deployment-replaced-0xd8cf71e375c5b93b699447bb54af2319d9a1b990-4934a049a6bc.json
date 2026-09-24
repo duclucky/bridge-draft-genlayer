@@ -1,0 +1,15 @@
+{
+  "network": "Studio Dev",
+  "chain_id": 61997,
+  "rpc": "https://studio-next.genlayer.com/api",
+  "explorer": "https://explorer-studio-dev.genlayer.com/",
+  "status": "FINALIZED_SUCCESS",
+  "deployment_tx": "0xbfdf693648bd7a07d1c94a59813b784d77faeed00ecf22502db4fb245c043a99",
+  "contract_address": "0xD8CF71e375C5B93b699447bb54Af2319d9a1b990",
+  "source_commit": "d0cd0d9c352fa94fdbc3380f3a67c76380831017",
+  "source_sha256": "4934a049a6bcdcc87437772867c01caec54230a344f9ee3ac960b538c7b5586f",
+  "runner": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "archived_status": "ABANDONED_BROKEN_TRANSFER",
+  "replacement_reason": "The internal ledger recorded both withdrawals, but the revision used gl.chain.Account instead of the EOA external-message interface. Its 2 GEN native balance has no remaining recovery path; do not send further value.",
+  "remaining_contract_balance_gen": 2
+}

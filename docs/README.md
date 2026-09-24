@@ -335,12 +335,12 @@ https://bridge-draft.vercel.app
 
 ## Current Studio Dev lifecycle evidence
 
-- Active contract: `0xD8CF71e375C5B93b699447bb54Af2319d9a1b990` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0xD8CF71e375C5B93b699447bb54Af2319d9a1b990)).
+- Active contract: `0xb49039e50e549E3c93Cf2303D07740698e8de7ef` ([Explorer](https://explorer-studio-dev.genlayer.com/address/0xb49039e50e549E3c93Cf2303D07740698e8de7ef)).
 - Session creation: 2 GEN locked; Party A and Party B each finalized one term and an independent collection-completion transaction before semantic review finalized `BALANCED_DRAFT`.
-- Settlement: both parties ratified; each made one finalized withdrawal of 1 GEN. Canonical terminal read: `RATIFIED`, `locked_gen=0`, `a_credit_gen=0`, `b_credit_gen=0`.
+- Settlement: both parties ratified; each made one finalized withdrawal of 1 GEN through the EOA external-message interface. Canonical terminal read: `RATIFIED`, `locked_gen=0`, `a_credit_gen=0`, `b_credit_gen=0`; native contract balance moved 2 -> 1 -> 0 GEN and both recipient balances increased after network fees.
 - Evidence files retain only allowlisted hashes, actor roles, finality, and canonical reads. Browser proof and script-signed proof are intentionally distinct.
 - Two superseded diagnostic revisions are explicitly archived as abandoned after their reviews remained undetermined; no additional value is sent to them, and they are not counted as active-lifecycle evidence.
-- The prior successful revision is archived as settled and replaced solely for the reviewer-requested bilateral collection-completion rule.
+- Revision `0xD8CF...b990` is archived as `ABANDONED_BROKEN_TRANSFER`: its ledger cleared without valid EOA messages, leaving 2 GEN without a recovery path. It receives no further value and is not active evidence.
 
 ## Honest limitations
 

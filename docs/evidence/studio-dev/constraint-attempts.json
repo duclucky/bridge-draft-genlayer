@@ -1,30 +1,33 @@
 {
   "network": "Studio Dev",
+  "contract_address": "0xb49039e50e549E3c93Cf2303D07740698e8de7ef",
   "session_id": "0xc495ef51618d03267a1f227afe5b27b38c748272:1",
   "attempts": [
     {
       "role": "A",
       "action": "submit_constraint",
-      "transaction_hash": "0x6dc0b72a9351bd821cb7eebae952ac120ae4c11415d040ed6c02710efd34cf0b",
+      "transaction_hash": "0x4c9b3056ed203ea35ae0abfadf478553f83ef313f1d14bfc3a37535a830850dd",
       "status": "FINALIZED_SUCCESS"
     },
     {
       "role": "B",
       "action": "submit_constraint",
-      "transaction_hash": "0xbcd080bd95cc9e0e7ea5ab68bba9b0d03b279a80d76dea83cd1de7e49e63b4b0",
+      "transaction_hash": "0x2590535f0f65b07ee6249360bd046dab9973e79aa6e30e6423b2c95632175e87",
       "status": "FINALIZED_SUCCESS"
     },
     {
       "role": "A",
       "action": "mark_collection_complete",
-      "transaction_hash": "0x5f388435d2faabe12c18925a090d16a12d7c117ca79f765a2379d56d31d878e5",
+      "transaction_hash": "0xf569b7ae236771b5556d65d8ea59a6513711f4871986021879feb4f274eab8e3",
       "status": "FINALIZED_SUCCESS"
     },
     {
       "role": "B",
       "action": "mark_collection_complete",
-      "transaction_hash": "0x85cde0ad0db9e3642b95a9b1c23a96710cfa5ed261d802ec51c619f1a5f6c5a8",
+      "transaction_hash": "0xd6ca90595696384cfebfe389f4f0929bf2446c73d981492ff2d5575a1e9a50f7",
       "status": "FINALIZED_SUCCESS"
     }
-  ]
+  ],
+  "term_count": 2,
+  "bilateral_collection_complete": true
 }
